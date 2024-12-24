@@ -53,26 +53,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             p.assets.smallImage = "mini" // Small image: Mini
         } else {
             // Xcode неактивно
-            p.assets.largeImage = "mini" // Large image: Mini
-            p.assets.smallImage = nil    // Small image: не используется
+            p.assets.largeImage = "icon" // Large image: Mini
+            p.assets.smallImage = "mini"    // Small image: не используется
         }
 
         // Вторая строка
         if let ws = ws, an == "Xcode" {
             if ws != "Untitled" {
-                p.state = "Working on \(withoutFileExt(ws))"
+                p.state = "🔥 Working on \(withoutFileExt(ws))"
                 lastWindow = ws
             } else {
-                p.state = "Untitled workspace"
+                p.state = "🔍 Checking something else"
             }
         } else {
-            p.state = "Suspended"
+            p.state = "☕️ Taking a break..."
         }
 
         // Третья строка
         if let fn = fn {
             if let fileExt = getFileExt(fn) {
-                p.details = "\(withoutFileExt(fn)).\(fileExt)"
+                p.details = "Editing \(withoutFileExt(fn)).\(fileExt)"
             } else {
                 p.details = "\(fn) (no extension)"
             }
@@ -83,9 +83,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Добавляем больше строк через timestamps
         p.timestamps.start = startDate
         p.timestamps.end = startDate?.addingTimeInterval(15 * 60) // Добавим таймер на 15 минут
-
-        // Установка small image всегда как "mini"
-        p.assets.smallImage = "mini"
 
         // Отправка обновленного RichPresence
         rpc?.setPresence(p)

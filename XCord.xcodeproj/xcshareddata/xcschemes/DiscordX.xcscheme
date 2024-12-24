@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "50C6CBAE244974A400F10C5D"
-               BuildableName = "DiscordX.app"
-               BlueprintName = "DiscordX"
-               ReferencedContainer = "container:DiscordX.xcodeproj">
+               BuildableName = "XCord.app"
+               BlueprintName = "XCord"
+               ReferencedContainer = "container:XCord.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "50C6CBAE244974A400F10C5D"
-            BuildableName = "DiscordX.app"
-            BlueprintName = "DiscordX"
-            ReferencedContainer = "container:DiscordX.xcodeproj">
+            BuildableName = "XCord.app"
+            BlueprintName = "XCord"
+            ReferencedContainer = "container:XCord.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "50C6CBAE244974A400F10C5D"
-            BuildableName = "DiscordX.app"
-            BlueprintName = "DiscordX"
-            ReferencedContainer = "container:DiscordX.xcodeproj">
+            BuildableName = "XCord.app"
+            BlueprintName = "XCord"
+            ReferencedContainer = "container:XCord.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

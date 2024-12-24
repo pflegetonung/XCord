@@ -19,12 +19,12 @@
 /* Begin PBXFileReference section */
 		5028EA44244B181D003A1830 /* HelperFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
 		5068E2DE244AA3C90012CCF7 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		50C6CBAF244974A400F10C5D /* DiscordX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DiscordX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		50C6CBAF244974A400F10C5D /* XCord.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XCord.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50C6CBB2244974A400F10C5D /* XCordApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCordApp.swift; sourceTree = "<group>"; };
 		50C6CBB6244974A700F10C5D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		50C6CBB9244974A700F10C5D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		50C6CBBE244974A700F10C5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		50C6CBBF244974A700F10C5D /* DiscordX.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DiscordX.entitlements; sourceTree = "<group>"; };
+		50C6CBBF244974A700F10C5D /* XCord.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = XCord.entitlements; sourceTree = "<group>"; };
 		50C6CBC8244975F200F10C5D /* Applescript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Applescript.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -43,7 +43,7 @@
 		50C6CBA6244974A400F10C5D = {
 			isa = PBXGroup;
 			children = (
-				50C6CBB1244974A400F10C5D /* DiscordX */,
+				50C6CBB1244974A400F10C5D /* XCord */,
 				50C6CBB0244974A400F10C5D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -51,24 +51,24 @@
 		50C6CBB0244974A400F10C5D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				50C6CBAF244974A400F10C5D /* DiscordX.app */,
+				50C6CBAF244974A400F10C5D /* XCord.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		50C6CBB1244974A400F10C5D /* DiscordX */ = {
+		50C6CBB1244974A400F10C5D /* XCord */ = {
 			isa = PBXGroup;
 			children = (
+				50C6CBB6244974A700F10C5D /* Assets.xcassets */,
+				50C6CBBE244974A700F10C5D /* Info.plist */,
+				50C6CBBF244974A700F10C5D /* XCord.entitlements */,
+				50C6CBB8244974A700F10C5D /* Preview Content */,
 				50C6CBB2244974A400F10C5D /* XCordApp.swift */,
 				5028EA44244B181D003A1830 /* HelperFunctions.swift */,
 				5068E2DE244AA3C90012CCF7 /* Constants.swift */,
 				50C6CBC8244975F200F10C5D /* Applescript.swift */,
-				50C6CBB6244974A700F10C5D /* Assets.xcassets */,
-				50C6CBBE244974A700F10C5D /* Info.plist */,
-				50C6CBBF244974A700F10C5D /* DiscordX.entitlements */,
-				50C6CBB8244974A700F10C5D /* Preview Content */,
 			);
-			path = DiscordX;
+			path = XCord;
 			sourceTree = "<group>";
 		};
 		50C6CBB8244974A700F10C5D /* Preview Content */ = {
@@ -82,9 +82,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		50C6CBAE244974A400F10C5D /* DiscordX */ = {
+		50C6CBAE244974A400F10C5D /* XCord */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 50C6CBC2244974A700F10C5D /* Build configuration list for PBXNativeTarget "DiscordX" */;
+			buildConfigurationList = 50C6CBC2244974A700F10C5D /* Build configuration list for PBXNativeTarget "XCord" */;
 			buildPhases = (
 				50C6CBAB244974A400F10C5D /* Sources */,
 				50C6CBAC244974A400F10C5D /* Frameworks */,
@@ -94,12 +94,12 @@
 			);
 			dependencies = (
 			);
-			name = DiscordX;
+			name = XCord;
 			packageProductDependencies = (
 				C3DCE3CA251FBE3F008A8718 /* SwordRPC */,
 			);
 			productName = RPFX;
-			productReference = 50C6CBAF244974A400F10C5D /* DiscordX.app */;
+			productReference = 50C6CBAF244974A400F10C5D /* XCord.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -118,7 +118,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 50C6CBAA244974A400F10C5D /* Build configuration list for PBXProject "DiscordX" */;
+			buildConfigurationList = 50C6CBAA244974A400F10C5D /* Build configuration list for PBXProject "XCord" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -134,7 +134,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				50C6CBAE244974A400F10C5D /* DiscordX */,
+				50C6CBAE244974A400F10C5D /* XCord */,
 			);
 		};
 /* End PBXProject section */
@@ -285,17 +285,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = DiscordX/DiscordX.entitlements;
+				CODE_SIGN_ENTITLEMENTS = XCord/XCord.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2020.9.30;
-				DEVELOPMENT_ASSET_PATHS = "\"DiscordX/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"XCord/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = DiscordX/Info.plist;
+				INFOPLIST_FILE = XCord/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = XCord;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -313,17 +313,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = DiscordX/DiscordX.entitlements;
+				CODE_SIGN_ENTITLEMENTS = XCord/XCord.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2020.9.30;
-				DEVELOPMENT_ASSET_PATHS = "\"DiscordX/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"XCord/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = DiscordX/Info.plist;
+				INFOPLIST_FILE = XCord/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = XCord;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -340,7 +340,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		50C6CBAA244974A400F10C5D /* Build configuration list for PBXProject "DiscordX" */ = {
+		50C6CBAA244974A400F10C5D /* Build configuration list for PBXProject "XCord" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				50C6CBC0244974A700F10C5D /* Debug */,
@@ -349,7 +349,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		50C6CBC2244974A700F10C5D /* Build configuration list for PBXNativeTarget "DiscordX" */ = {
+		50C6CBC2244974A700F10C5D /* Build configuration list for PBXNativeTarget "XCord" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				50C6CBC3244974A700F10C5D /* Debug */,
