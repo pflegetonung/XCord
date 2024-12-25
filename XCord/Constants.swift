@@ -1,50 +1,28 @@
 //
 //  Constants.swift
-//  DiscordX
+//  XCord
 //
-//  Created by Asad Azam on 28/9/20.
-//  Copyright © 2021 Asad Azam. All rights reserved.
+//  Created by Phillip on 24.12.2024.
 //
 
 import Foundation
 
-// used to register for notifs when Xcode opens/closes
 let xcodeBundleId = "com.apple.dt.Xcode"
-
-// how often we check Xcode for a status update
-let refreshInterval = 5 // seconds
-
-// if you switch out of Xcode the timer stops
-/// true: timer will stop
-/// false: timer will not stop
+let refreshInterval = 5
 let strictMode = true
-
-// it will never stop the timer regardless of anything except if you kill DiscordX
-/// true: timer will not stop
-/// false: timer will stop
 let flauntMode = false
+let discordClientId = "1321136422807146568"
+let discordRPImageKeyDefault = "xcode"
+let discordRPImageKeyXcode = "xcode"
 
-// some other window names of Xcode
 let xcodeWindowNames = [
     "Simulator",
     "Instruments",
     "Accessibility Inspector",
     "FileMerge",
     "Create ML",
-    "RealityComposer",
-    //doc://com.apple.documentation -> Process name -> Xcode Documentation
-    //unable to find organiser
+    "RealityComposer"
 ]
-
-// The following constants are for use with the Discord App
-// if you're using your own Discord App, update this as needed
-
-let discordClientId = "1321136422807146568"
-
-// Chaniging the below list of files won't do anything as they are hardcoded
-// on the discord application. To add images you need to create your own application
-
-// discord image keys of supported file types
 let discordRPImageKeys = [
     "swift",
     "playground",
@@ -68,12 +46,5 @@ let discordRPImageKeys = [
     "metal",
     "xib",
     "arobject",
-    "entitlements",
+    "entitlements"
 ]
-
-// default for unsupported file types
-let discordRPImageKeyDefault = "xcode"
-
-// Xcode application icon
-let discordRPImageKeyXcode = "xcode"
-

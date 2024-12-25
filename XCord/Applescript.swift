@@ -1,9 +1,8 @@
 //
 //  Applescript.swift
-//  DiscordX
+//  XCord
 //
-//  Created by Asad Azam on 28/9/20.
-//  Copyright © 2021 Asad Azam. All rights reserved.
+//  Created by Phillip on 24.12.2024.
 //
 
 import Foundation
@@ -23,11 +22,9 @@ func runAPScript(_ s: APScripts) -> [String]? {
     end tell
     """
     
-    // execute the script
     let script = NSAppleScript.init(source: scr)
     let result = script?.executeAndReturnError(nil)
 
-    // format the result as a Swift array
     if let desc = result {
         var arr: [String] = []
         if desc.numberOfItems == 0 {
@@ -36,7 +33,6 @@ func runAPScript(_ s: APScripts) -> [String]? {
         for i in 1...desc.numberOfItems {
             let strVal = desc.atIndex(i)!.stringValue
             if var uwStrVal = strVal {
-                // remove " — Edited" suffix if it exists
                 if uwStrVal.hasSuffix(" — Edited") {
                     uwStrVal.removeSubrange(uwStrVal.lastIndex(of: "—")!...)
                     uwStrVal.removeLast()
@@ -51,31 +47,27 @@ func runAPScript(_ s: APScripts) -> [String]? {
 }
 
 func getActiveFilename() -> String? {
-    // Запускаем AppleScript для получения названий документов и окон
     guard let fileNames = runAPScript(.documentNames),
           let windowNames = runAPScript(.windowNames) else {
-        print("Ошибка: Не удалось получить названия файлов или окон")
+        print("DEBUG: Can't get documentNames or windowNames")
         return nil
     }
 
-    print("Найденные файлы: \(fileNames)")
-    print("Найденные окна: \(windowNames)")
+    print("DEBUG: Files: \(fileNames)")
+    print("DEBUG: Windows: \(windowNames)")
 
-    // Попробуем найти совпадение между окнами и файлами
     for window in windowNames {
         let cleanWindowName = window.trimmingCharacters(in: .whitespacesAndNewlines)
         for file in fileNames {
             let cleanFileName = file.trimmingCharacters(in: .whitespacesAndNewlines)
 
-            // Сравниваем окно с файлом
             if cleanWindowName.contains(cleanFileName) {
-                print("Активный файл найден: \(cleanFileName)")
+                print("DEBUG: Active file: \(cleanFileName)")
                 return cleanFileName
             }
         }
     }
 
-    print("Не удалось сопоставить файл и окно")
     return nil
 }
 
@@ -93,8 +85,6 @@ func getActiveWindow() -> String? {
         end tell
     """
     
-//    get the name of every process whose visible is true
-    
     let script = NSAppleScript.init(source: activeApplication)
     let result = script?.executeAndReturnError(nil)
 
@@ -104,7 +94,6 @@ func getActiveWindow() -> String? {
             guard let strVal = desc.atIndex(i)!.stringValue else { return "Xcode" }
             arr.append(strVal)
         }
-//        print(arr[0])
         return arr[0]
     }
     return ""

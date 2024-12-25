@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Cocoa
 import SwordRPC
+import ServiceManagement
 
 @main
 struct XCordApp {
@@ -26,6 +27,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var startDate: Date?
     var inactiveDate: Date?
     var lastWindow: String?
+    var statusItem: NSStatusItem!
+    let helperBundleId = "com.yourcompany.helper"
 
     func beginTimer() {
         timer = Timer(timeInterval: TimeInterval(refreshInterval), repeats: true, block: { _ in
@@ -40,52 +43,47 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func updateStatus() {
-        var p = RichPresence()
-
+        var rp = RichPresence()
         let an = getActiveWindow()
         let fn = getActiveFilename()
         let ws = getActiveWorkspace()
-
-        // Первая строка
+        
         if let an = an, an == "Xcode" {
-            // Xcode активно
-            p.assets.largeImage = "xcode" // Large image: Xcode
-            p.assets.smallImage = "mini" // Small image: Mini
+            rp.assets.largeImage = "xcode"
+            rp.assets.smallImage = "mini"
         } else {
-            // Xcode неактивно
-            p.assets.largeImage = "icon" // Large image: Mini
-            p.assets.smallImage = "mini"    // Small image: не используется
+            rp.assets.largeImage = "icon"
+            rp.assets.smallImage = "mini"
         }
-
-        // Вторая строка
+        
         if let ws = ws, an == "Xcode" {
             if ws != "Untitled" {
-                p.state = "🔥 Working on \(withoutFileExt(ws))"
+                rp.details = "Working on \(withoutFileExt(ws)) 🔥"
                 lastWindow = ws
             } else {
-                p.state = "🔍 Checking something else"
+                rp.details = "Checking something else 🔍"
             }
         } else {
-            p.state = "☕️ Taking a break..."
+            rp.details = "Taking a break... ☕️"
         }
-
-        // Третья строка
+        
         if let fn = fn {
             if let fileExt = getFileExt(fn) {
-                p.details = "Editing \(withoutFileExt(fn)).\(fileExt)"
+                rp.state = "\(withoutFileExt(fn)).\(fileExt)"
             } else {
-                p.details = "\(fn) (no extension)"
+                rp.state = "\(fn) (no extension)"
             }
         } else {
-            p.details = "No file open"
+            rp.state = "No file open"
         }
-
-        // Добавляем больше строк через timestamps
-        p.timestamps.start = startDate
-        p.timestamps.end = startDate?.addingTimeInterval(15 * 60) // Добавим таймер на 15 минут
-
-        // Отправка обновленного RichPresence
-        rpc?.setPresence(p)
+        
+        if startDate == nil {
+            startDate = Date()
+        }
+        rp.timestamps.start = startDate
+        rp.timestamps.end = nil
+        
+        rpc?.setPresence(rp)
     }
 
     func initRPC() {
@@ -101,6 +99,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        NSApp.setActivationPolicy(.accessory)
+        
         for app in NSWorkspace.shared.runningApplications where app.bundleIdentifier == xcodeBundleId {
             initRPC()
         }
@@ -119,6 +119,39 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self.deinitRPC()
             }
         }
+        
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        
+        if let button = statusItem.button {
+            button.image = NSImage(systemSymbolName: "fleuron", accessibilityDescription: "App Icon")
+            button.image?.isTemplate = true
+        }
+
+        let menu = NSMenu()
+        menu.addItem(NSMenuItem(title: "Launch at Login", action: #selector(toggleLaunchAtLogin), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Quit", action: #selector(quitApp), keyEquivalent: "q"))
+
+        statusItem.menu = menu
+    }
+    
+    @objc func toggleLaunchAtLogin() {
+        let isEnabled = isLaunchAtLoginEnabled()
+        SMLoginItemSetEnabled(helperBundleId as CFString, !isEnabled)
+
+        if !isEnabled {
+            print("Launch at login enabled")
+        } else {
+            print("Launch at login disabled")
+        }
+    }
+
+    func isLaunchAtLoginEnabled() -> Bool {
+        let jobs = SMJobCopyDictionary(kSMDomainUserLaunchd, helperBundleId as CFString)?.takeRetainedValue()
+        return jobs != nil
+    }
+
+    @objc func quitApp() {
+        NSApplication.shared.terminate(self)
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

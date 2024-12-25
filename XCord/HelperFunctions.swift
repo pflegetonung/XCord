@@ -1,9 +1,8 @@
 //
 //  HelperFunctions.swift
-//  DiscordX
+//  XCord
 //
-//  Created by Asad Azam on 28/9/20.
-//  Copyright © 2021 Asad Azam. All rights reserved.
+//  Created by Phillip on 24.12.2024.
 //
 
 import Foundation
