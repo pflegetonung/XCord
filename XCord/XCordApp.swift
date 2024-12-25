@@ -83,12 +83,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         } else if let ws = ws, an == "Accessibility Inspector" {
             if ws != "Untitled" {
-                if let elementInfo = getAccessibilityElement() {
-                    let detailsText = elementInfo.traits != "None" ? elementInfo.traits : elementInfo.name
-                    rp.details = "Inspecting \(detailsText) 🔍"
-                } else {
-                    rp.details = "Inspecting Unknown Element 🔍"
-                }
+                rp.details = "Inspecting 🔍"
                 lastWindow = ws
             } else {
                 rp.details = "Loading ⚡️"
