@@ -29,7 +29,114 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var lastWindow: String?
     var statusItem: NSStatusItem!
     let helperBundleId = "com.yourcompany.helper"
+    let assetsMapping: [String: String] = [
+        "Xcode": "xcode",
+        "Simulator": "simulator",
+        "Instruments": "instruments",
+        "Accessibility Inspector": "accessibilityinspector",
+        "FileMerge": "filemerge",
+        "Create ML": "createml",
+        "RealityComposer": "realitycomposer"
+    ]
 
+    func updateStatus() {
+        var rp = RichPresence()
+        let an = getActiveWindow()
+        let fn = getActiveFilename()
+        let ws = getActiveWorkspace()
+        
+        if !isProjectOpen() {
+            rpc?.setPresence(RichPresence())
+            return
+        }
+        
+        // MARK: - Images
+        if let an = an, let largeImage = assetsMapping[an] {
+            rp.assets.largeImage = largeImage
+            rp.assets.smallImage = "mini"
+        } else {
+            rp.assets.largeImage = "icon"
+            rp.assets.smallImage = "mini"
+        }
+        
+        // MARK: - Details (1st row)
+        if let ws = ws, an == "Xcode" {
+            if ws != "Untitled" {
+                rp.details = "Working on \(withoutFileExt(ws)) 🔥"
+                lastWindow = ws
+            } else {
+                rp.details = "Loading ⚡️"
+            }
+        } else if let ws = ws, an == "Simulator" {
+            if ws != "Untitled" {
+                rp.details = "\(withoutFileExt(ws)) in Action 📱"
+                lastWindow = ws
+            } else {
+                rp.details = "Loading ⚡️"
+            }
+        } else if let ws = ws, an == "Instruments" {
+            if ws != "Untitled" {
+                rp.details = "Using Instruments 🔧"
+                lastWindow = ws
+            } else {
+                rp.details = "Loading ⚡️"
+            }
+        } else if let ws = ws, an == "Accessibility Inspector" {
+            if ws != "Untitled" {
+                if let elementInfo = getAccessibilityElement() {
+                    let detailsText = elementInfo.traits != "None" ? elementInfo.traits : elementInfo.name
+                    rp.details = "Inspecting \(detailsText) 🔍"
+                } else {
+                    rp.details = "Inspecting Unknown Element 🔍"
+                }
+                lastWindow = ws
+            } else {
+                rp.details = "Loading ⚡️"
+            }
+        } else {
+            rp.details = "Taking a break... ☕️"
+        }
+        
+        // MARK: - State (2nd row)
+        if let fn = fn, an == "Xcode" {
+            if let fileExt = getFileExt(fn) {
+                rp.state = "\(withoutFileExt(fn)).\(fileExt)"
+            } else {
+                rp.state = "\(fn) (no extension)"
+            }
+        } else if let fn = fn, an == "Simulator" {
+            if let simulatorInfo = getActiveSimulator() {
+                rp.state = "\(simulatorInfo.osVersion), \(simulatorInfo.model)"
+            } else {
+                rp.state = "Unknown Simulator"
+            }
+        } else if let fn = fn, an == "Instruments" {
+            let activity = getInstrumentsActivity()
+            if activity == "Unknown Activity" || activity.isEmpty {
+                rp.state = "Getting ready"
+            } else {
+                rp.state = "Profiling: \(activity)"
+            }
+        } else if let fn = fn, an == "Accessibility Inspector" {
+            if let elementInfo = getAccessibilityElement() {
+                rp.state = "Traits: \(elementInfo.traits)"
+            } else {
+                rp.state = "No element selected"
+            }
+        } else {
+            rp.state = "No file open"
+        }
+        
+// MARK: - Timer
+        if startDate == nil {
+            startDate = Date()
+        }
+        rp.timestamps.start = startDate
+        rp.timestamps.end = nil
+        
+        rpc?.setPresence(rp)
+    }
+    
     func beginTimer() {
         timer = Timer(timeInterval: TimeInterval(refreshInterval), repeats: true, block: { _ in
             self.updateStatus()
@@ -40,50 +147,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func clearTimer() {
         timer?.invalidate()
-    }
-
-    func updateStatus() {
-        var rp = RichPresence()
-        let an = getActiveWindow()
-        let fn = getActiveFilename()
-        let ws = getActiveWorkspace()
-        
-        if let an = an, an == "Xcode" {
-            rp.assets.largeImage = "xcode"
-            rp.assets.smallImage = "mini"
-        } else {
-            rp.assets.largeImage = "icon"
-            rp.assets.smallImage = "mini"
-        }
-        
-        if let ws = ws, an == "Xcode" {
-            if ws != "Untitled" {
-                rp.details = "Working on \(withoutFileExt(ws)) 🔥"
-                lastWindow = ws
-            } else {
-                rp.details = "Checking something else 🔍"
-            }
-        } else {
-            rp.details = "Taking a break... ☕️"
-        }
-        
-        if let fn = fn {
-            if let fileExt = getFileExt(fn) {
-                rp.state = "\(withoutFileExt(fn)).\(fileExt)"
-            } else {
-                rp.state = "\(fn) (no extension)"
-            }
-        } else {
-            rp.state = "No file open"
-        }
-        
-        if startDate == nil {
-            startDate = Date()
-        }
-        rp.timestamps.start = startDate
-        rp.timestamps.end = nil
-        
-        rpc?.setPresence(rp)
     }
 
     func initRPC() {
@@ -157,6 +220,197 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ aNotification: Notification) {
         deinitRPC()
         clearTimer()
+    }
+    
+    func getActiveSimulator() -> (model: String, osVersion: String)? {
+        let process = Process()
+        let pipe = Pipe()
+
+        // Указываем путь к simctl
+        process.executableURL = URL(fileURLWithPath: "/Applications/Xcode.app/Contents/Developer/usr/bin/simctl")
+        process.arguments = ["list", "devices"]
+        process.standardOutput = pipe
+        process.standardError = pipe
+
+        do {
+            try process.run()
+            process.waitUntilExit()
+        } catch {
+            print("Failed to run simctl: \(error)")
+            return nil
+        }
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        guard let output = String(data: data, encoding: .utf8) else {
+            print("No output from simctl")
+            return nil
+        }
+
+        let lines = output.split(separator: "\n")
+
+        var currentOS: String = ""
+        for line in lines {
+            if line.hasPrefix("-- iOS") {
+                currentOS = line.replacingOccurrences(of: "--", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+                print("Detected iOS version: \(currentOS)")
+            } else if line.contains("(Booted)") {
+                print("Booted device line: \(line)")
+                let components = line.split(separator: "(")
+                if components.count > 0 {
+                    let model = components[0].trimmingCharacters(in: .whitespacesAndNewlines)
+                    return (model: model, osVersion: currentOS)
+                }
+            }
+        }
+
+        print("No booted device found.")
+        return nil
+    }
+    
+    func isProjectOpen() -> Bool {
+        let script = """
+        tell application "Xcode"
+            try
+                if (count of workspace documents) > 0 then
+                    return true
+                else
+                    return false
+                end if
+            on error
+                return false
+            end try
+        end tell
+        """
+
+        let appleScript = NSAppleScript(source: script)
+        var errorDict: NSDictionary?
+        if let result = appleScript?.executeAndReturnError(&errorDict).booleanValue {
+            return result
+        }
+        return false
+    }
+    
+    func getInstrumentsActivity() -> String {
+        let script = """
+        tell application "Instruments"
+            try
+                set activeDocument to name of front document
+                return activeDocument
+            on error
+                return "Unknown Activity"
+            end try
+        end tell
+        """
+
+        let appleScript = NSAppleScript(source: script)
+        var errorDict: NSDictionary?
+        if let output = appleScript?.executeAndReturnError(&errorDict).stringValue {
+            return output
+        }
+        return "Unknown Activity"
+    }
+
+    struct AccessibilityElement {
+        let name: String
+        let type: String
+        let traits: String
+    }
+
+    func getAccessibilityElement() -> AccessibilityElement? {
+        let script = """
+        tell application "Accessibility Inspector"
+            try
+                set selectedElement to selected UI element
+                if selectedElement is not missing value then
+                    set elementLabel to value of attribute "AXLabel" of selectedElement
+                    set elementTitle to value of attribute "AXTitle" of selectedElement
+                    set elementType to value of attribute "AXRole" of selectedElement
+
+                    if elementLabel is missing value then
+                        set elementLabel to "None"
+                    end if
+                    if elementTitle is missing value then
+                        set elementTitle to "None"
+                    end if
+                    if elementType is missing value then
+                        set elementType to "Unknown Type"
+                    end if
+
+                    return elementTitle & ";" & elementLabel & ";" & elementType
+                else
+                    return "No element selected"
+                end if
+            on error
+                return "No element selected"
+            end try
+        end tell
+        """
+
+        let appleScript = NSAppleScript(source: script)
+        var errorDict: NSDictionary?
+        if let output = appleScript?.executeAndReturnError(&errorDict).stringValue {
+            print("AppleScript Output: \(output)") // Логируем результат
+            if output == "No element selected" {
+                return nil
+            }
+
+            let components = output.split(separator: ";")
+            if components.count == 3 {
+                print("Parsed Components: \(components)") // Логируем разобранные данные
+                return AccessibilityElement(
+                    name: String(components[1]), // Label, если нет Title
+                    type: String(components[2]), // Type
+                    traits: String(components[0]) // Title
+                )
+            } else {
+                print("Unexpected AppleScript Output: \(output)") // Отладка
+            }
+        } else if let error = errorDict {
+            print("AppleScript Error: \(error)") // Логируем ошибки
+        }
+        return nil
+    }
+    
+    struct FileMergeActivity {
+        let state: String
+        let details: String
+    }
+
+    func getFileMergeActivity() -> FileMergeActivity? {
+        let script = """
+        tell application "FileMerge"
+            try
+                if not (exists front document) then return "idle"
+                set docName to name of front document
+                set leftFile to name of left file of front document
+                set rightFile to name of right file of front document
+                if (exists leftFile) and (exists rightFile) then
+                    return leftFile & " ↔ " & rightFile
+                else
+                    return "Merging"
+                end if
+            on error
+                return "idle"
+            end try
+        end tell
+        """
+
+        let appleScript = NSAppleScript(source: script)
+        var errorDict: NSDictionary?
+        if let output = appleScript?.executeAndReturnError(&errorDict).stringValue {
+            if output.contains("↔") {
+                return FileMergeActivity(
+                    state: "Comparing: \(output)",
+                    details: "FileMerge: Highlighting differences"
+                )
+            } else if output == "Merging" {
+                return FileMergeActivity(
+                    state: "Merging changes",
+                    details: "Resolving conflicts"
+                )
+            }
+        }
+        return nil
     }
 }
 
